@@ -91,3 +91,28 @@ Potential access flow: connect wallet, sign a server-issued expiring challenge, 
 
 Unlock announcements are verifiable events: establish actual licensing and availability before claiming a game is unlocked. Publish a canonical signed event with IPFS CID, ledger evidence, playable host directory and explicit terms; relay to X, Telegram and other platforms. Separate milestones for number of players, independently hosted services, and purchased game licenses. A larger community may help licensing negotiations but creates no right to someone else's intellectual property.
 
+
+## Second pull: October 11, 2026 (pull2.tar)
+
+Observed output: 40 top-account rows; 327 signature-record rows; 123 transaction-detail rows, of which 121 contain a transaction response and 2 are null due to version errors. Coverage reports 164 RPC calls, all 40 token-account owners resolved, and only 2 RPC errors. **This is a sampled account-history dataset, not complete mint history or a participant roster.**
+
+| Result | Get Money | Purple Squirrel |
+| --- | ---: | ---: |
+| Top token accounts / distinct owner addresses | 20 / 17 | 20 / 20 |
+| Signature-record rows / distinct signatures | 139 / 118 | 188 / 188 |
+| Transaction-detail rows / non-null responses | 57 / 55 | 66 / 66 |
+| Original top-account balances changed by pull | 0 | 0 |
+| Sampled earliest transaction timestamp | 2025-09-09 | 2022-05-05 |
+| Sampled latest timestamp | 2026-10-11 | 2026-10-09 |
+
+Four of Get Money's top token accounts resolve to owner address `HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC`. Purple Squirrel's top 20 accounts each resolve to distinct addresses. Do not treat these addresses as known humans or assume they are ordinary wallets. All 40 account classifications remain **unclassified**.
+
+A historical sample from a token account can include unrelated SPL assets, swaps, pool operations, ATA creation and other activity. Filter the transaction's pre/post token balances and decoded instructions *by target mint* before categorizing any record as a Get Money or Purple Squirrel transfer. The signature `err` field indicates transaction failure when non-null; do not treat failed transactions as completed payments. Repeated signatures across accounts must be deduplicated before aggregate transaction counts.
+
+### Collector bug found
+
+Two Get Money `getTransaction` results failed with JSON-RPC code -32015: transaction version 1 requires `maxSupportedTransactionVersion: 1` instead of 0. Update the call and retry those signatures. Preserve original response and retry status. For future pulls, extract only relevant mint balance deltas with raw atomic integer strings, plus from/to token accounts and owner addresses when demonstrable.
+
+### Next analytic milestone
+
+Construct *target-mint-specific* historical transfer edges from the transactions actually downloaded, excluding failed transactions and classifying pool/program wallets before generating any airdrop candidates. Cross-reference signatures against an independent explorer for a few samples. Count active wallet owner addresses and distinct days in this **sample only**, never claim they measure all token holders or full historical activity. Extend to non-top-20 accounts to find community participants, since top account holders are poor proxies for ordinary players.
