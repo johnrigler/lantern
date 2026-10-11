@@ -48,6 +48,10 @@ The [Zorkmid monetary white paper](ZORKMID-WHITEPAPER.md#i-b-the-proof-is-the-st
 
 [One Verifiable Story](STORY-PROOF.md) specifies an end-to-end Lantern session → canonical evidence → optional signatures → Chisel transaction reference → address-based independent verification. It distinguishes existing deterministic replay support from proposed signing and ledger integrations and provides concrete acceptance tests.
 
+## Browser evidence verifier V1
+
+[Open the standalone evidence verifier](verify.html) to canonicalize a `lantern.story.v1` JSON object, calculate its SHA-256 hash, and compare it with an independently supplied expected digest. The verifier uses browser Web Crypto and does not send the evidence to a server. **V1 does not verify gameplay, issuer signatures, or blockchain publication.** See [One Verifiable Story](STORY-PROOF.md) for the remaining stages.
+
 ## Run your own server
 
 Lantern is not dependent on the default host. On a Linux machine, install Python and Frotz, provide compatible story files, and run the server:
