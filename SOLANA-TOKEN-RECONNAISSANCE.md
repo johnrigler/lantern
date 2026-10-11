@@ -81,3 +81,13 @@ Payments are also expressive artifacts: preserve exact atomic transfer amounts a
 - `candidate_wallets.jsonl`: deduplicated owner-wallet candidates and reasons/evidence, **not** an automatic send list.
 - `transfers.jsonl`: full precision atomic amounts, transaction signatures, direction, timestamps, and source token accounts.
 - `coverage.json`: cursors, RPC limitations, classification confidence, and unobserved portions of history.
+
+
+## Licensed game unlocks and commercial access
+
+Lantern is protocol-open and can support both freely distributable games and rights-restricted licensed games. A Planetfall milestone is a potential rights-acquisition project, not a promise that licensing is available. A paid license must explicitly authorize server-hosted execution, commercial/token-gated access, game copies/backup, and the chosen number and identity of hosts. Do not place the commercial story file on public IPFS unless redistribution is permitted. IPFS can still serve frontend, metadata, descriptions and discoverability.
+
+Potential access flow: connect wallet, sign a server-issued expiring challenge, verify signature and current Zorkmid token ownership and balance on-chain, then issue a short-lived session credential; periodically recheck on renewal. A holding threshold is **not staking** and requires no on-chain action merely to authenticate. Someone can buy, play, sell, then lose eligibility on the next check. Token trades alone are not Lantern revenue; budget licensing against *realized* treasury receipts rather than quoted market capitalization or illiquid token holdings.
+
+Unlock announcements are verifiable events: establish actual licensing and availability before claiming a game is unlocked. Publish a canonical signed event with IPFS CID, ledger evidence, playable host directory and explicit terms; relay to X, Telegram and other platforms. Separate milestones for number of players, independently hosted services, and purchased game licenses. A larger community may help licensing negotiations but creates no right to someone else's intellectual property.
+
