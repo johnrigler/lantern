@@ -54,3 +54,7 @@ Preferred command-line interface: `python3 solana_token_dump.py --rpc 'https://m
 ## Durable discovery protocol
 
 A third party needs: chain + mint/transaction identifiers, a declared event or campaign identifier, sequence/row/column ordering when a composition spans transactions, amount decoding/palette rules, character/identity attestations (not assumed from wallet clustering), and stable artifact references. Signed and content-addressed manifest(s) should let new decoders reproduce the original result. An IPFS URI authenticates content but does not guarantee continued availability. The data format should support activity on chains other than Solana and distinguish game claims from verified economic actions.
+
+## Two-snapshot comparison
+
+Supply stayed exactly unchanged in atomic units between October 10 and October 11 for both mints: Get Money 999962765204317459, Purple Squirrel 994112889931622313. That establishes zero *net* change, not absence of all mint/burn activity. Both October 10 `getTokenLargestAccounts` requests against the public Solana endpoint failed with HTTP 429 after four attempts, while both October 11 pulls returned 20 accounts with zero errors. Supply outside the top 20 as of October 11: Get Money 37,662,190.217808384 and Purple Squirrel 17,857,965.372958760 tokens. Those are aggregate balances, not holder counts.
