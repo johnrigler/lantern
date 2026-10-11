@@ -58,3 +58,26 @@ A third party needs: chain + mint/transaction identifiers, a declared event or c
 ## Two-snapshot comparison
 
 Supply stayed exactly unchanged in atomic units between October 10 and October 11 for both mints: Get Money 999962765204317459, Purple Squirrel 994112889931622313. That establishes zero *net* change, not absence of all mint/burn activity. Both October 10 `getTokenLargestAccounts` requests against the public Solana endpoint failed with HTTP 429 after four attempts, while both October 11 pulls returned 20 accounts with zero errors. Supply outside the top 20 as of October 11: Get Money 37,662,190.217808384 and Purple Squirrel 17,857,965.372958760 tokens. Those are aggregate balances, not holder counts.
+
+## Ecosystem discovery and airdrop candidate list
+
+Get Money and Purple Squirrel define an initial *social orbit*, not a claim that their wallet owners are known or that holdings imply consent to receive airdrops. Extend the collector to other related community tokens, with an explicit, reproducible relevance/quality rubric (verified mint, activity over time, unique active owner estimates, liquidity depth, concentration after pool/treasury classification, retention). Do not equate token price or volume with community health.
+
+Produce a deduplicated **candidate** recipient table with source mint(s), observed owner wallet, evidence transaction IDs, first/last activity, behavior types (hold, receive, transfer, LP if verified), confidence/classification, last-check slot, exclusion reasons, and opt-in state. Exclude program/LP/treasury/exchange/custodial addresses until properly identified; a token-account address is not automatically a wallet to airdrop to. Public observations may identify wallet addresses, not people. Never label addresses as particular real-world people based only on ledger behavior.
+
+Build campaigns that can be inspected before sending. Prefer an opt-in claim or clearly disclosed invitation over unsolicited transfers; support decline/ignore and avoid creating recipient-associated token accounts without considering SOL rent costs and dust/spam effects. Capture payout transaction signatures and exact integer amounts so each drop doubles as a reconstructable visual/story event. Candidate identification, verified eligibility, consent, actual recipient list, and successful on-chain payout must remain separate states.
+
+## IPFS-first token and service economy
+
+Solana token metadata can publish a URI containing an `ipfs://` CID (wallet/indexer support varies; HTTP gateways are compatibility paths, not canonical identity). Put token metadata, Zorkmid protocol specifications, manifests, decoders, stories, imagery, and frontend bundles on IPFS; anchor important immutable CIDs and version pointers in verifiable ledger records. Pin/replicate content, because IPFS addresses content but does not itself ensure persistence.
+
+Service functionality (e.g. game sessions, searches, indexing, gateways, pinning) may require live hosts: use a signed, replaceable service registry with provider identity/key, advertised capabilities, endpoint(s), price and accepted asset, content/protocol versions, availability evidence, receipt format and reputation methodology. Hosting rewards are payments for verifiable delivery, not mere self-reported availability. Clients independently select providers based on observed uptime, latency, payment receipts and auditable results. Avoid making any single Lantern server or gateway mandatory.
+
+Payments are also expressive artifacts: preserve exact atomic transfer amounts and link signed service receipts to transactions so Chisel can render numerical patterns without sacrificing auditability. A payment receipt establishes a transaction, not by itself service quality or a human identity. Make cross-chain proof references possible; Solana is the default economic venue, not the exclusive protocol.
+
+### Next collector output
+
+- `token_orbit.json`: observed mint metadata and evidence-based comparison measurements.
+- `candidate_wallets.jsonl`: deduplicated owner-wallet candidates and reasons/evidence, **not** an automatic send list.
+- `transfers.jsonl`: full precision atomic amounts, transaction signatures, direction, timestamps, and source token accounts.
+- `coverage.json`: cursors, RPC limitations, classification confidence, and unobserved portions of history.
