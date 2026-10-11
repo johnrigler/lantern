@@ -112,6 +112,10 @@ For Zorkmid, separately document: selected host chain and token standard, supply
 
 A critic can publish a signed counterclaim to the same indexed history. The resulting sequence is a story of claim, evidence, response and verification rather than a promotional slogan. This is the proposed bridge between conventional product diligence and crypto token narratives. It is not an instruction to threaten critics, manipulate markets, or promise investment returns.
 
+## Browser verifier implementation status
+
+The standalone [verify.html](verify.html) implements a first-stage canonical SHA-256 verifier for `lantern.story.v1` evidence. It checks a restricted JSON subset, detects duplicate keys, validates the envelope, and compares an optional expected digest. It deliberately does not claim to validate gameplay, issuer signatures, or on-chain references. Cross-language test vectors and exact RFC 8785 interoperability still require testing.
+
 ## Implementation order
 
 1. Export a deterministic Lantern story bundle with canonicalization and fixture tests.
