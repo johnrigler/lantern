@@ -75,6 +75,10 @@ The game files are separate from the client and server code. Only distribute sto
 
 **Links:** [Play the game](https://johnrigler.github.io/lantern/lantern.html) · [Lantern homepage](https://johnrigler.github.io/lantern/) · [Technical notes](LANTERN.md) · [Attestation proposal](ATTESTATION-PROPOSAL.md)
 
+## Cross-chain Zorkmid lobby
+
+See [the cross-chain lobby architecture](docs/zorkmid-cross-chain-lobby.md) for the proposed no-token Mogwai commons, optional token-gated recognition on EVM/Solana, user-created and officially verified badges, and recovery of application indexes from original ledger records. This is a design proposal, not a deployed cross-chain service.
+
 ## ETHDenver 2027 coordination
 
 See [the project-specific ETHDenver / Zorkmid notes](docs/zorkmid-ethdenver-experience.md) for the proposed physical dartboard demonstration, conference materials, optional Zorkmid/ Base integration, and delivery gates. These are plans, not claims that a token, venue, or showcase is live.
