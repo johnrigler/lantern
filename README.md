@@ -74,3 +74,7 @@ The game files are separate from the client and server code. Only distribute sto
 **Zorkmid:** [Read the in-world monetary white paper](ZORKMID-WHITEPAPER.md). This is a proposed currency and financing design, not a deployed token or investment offering.
 
 **Links:** [Play the game](https://johnrigler.github.io/lantern/lantern.html) · [Lantern homepage](https://johnrigler.github.io/lantern/) · [Technical notes](LANTERN.md) · [Attestation proposal](ATTESTATION-PROPOSAL.md)
+
+## ETHDenver 2027 coordination
+
+See [the project-specific ETHDenver / Zorkmid notes](docs/zorkmid-ethdenver-experience.md) for the proposed physical dartboard demonstration, conference materials, optional Zorkmid/ Base integration, and delivery gates. These are plans, not claims that a token, venue, or showcase is live.
