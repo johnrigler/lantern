@@ -58,7 +58,7 @@ async function environment(page = 'onboard/index.html', href = 'https://johnrigl
   w.CanvasRenderingContext2D = ctx.constructor;
   w.fetch = () => { throw new Error('Unexpected network request during identity creation.'); };
   w.eval(await readFile(new URL('onboard/vendor/qrcode.min.js', root), 'utf8'));
-  if (page.startsWith('onboard/')) for (const name of ['chisel.js', 'chisel.sign.js']) {
+  if (page.startsWith('onboard/')) for (const name of ['chisel.js', 'chisel.sign.js', 'noble-secp256k1-3.2.0.browser.js', 'chisel.secp256k1.js', 'chisel.secp256k1.noble.js', 'chisel.sign.backend.js']) {
     w.eval(await readFile(new URL('onboard/vendor/' + name, root), 'utf8'));
   }
   return { dom, w, $: id => w.document.getElementById(id) };

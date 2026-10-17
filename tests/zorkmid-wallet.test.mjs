@@ -7,7 +7,7 @@ import cashaddr from '../onboard/vendor/ecashaddrjs-2.0.3.js';
 
 globalThis.window = globalThis;
 if (!globalThis.crypto?.subtle) Object.defineProperty(globalThis, 'crypto', { value: webcrypto });
-for (const file of ['chisel.js', 'chisel.sign.js']) {
+for (const file of ['chisel.js', 'chisel.sign.js', 'noble-secp256k1-3.2.0.browser.js', 'chisel.secp256k1.js', 'chisel.secp256k1.noble.js', 'chisel.sign.backend.js']) {
   vm.runInThisContext(await readFile(new URL('../onboard/vendor/' + file, import.meta.url), 'utf8'));
 }
 const wallet = await import('../onboard/wallet.js');

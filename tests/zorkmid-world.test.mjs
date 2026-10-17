@@ -36,7 +36,7 @@ test('world keeps its game mounted, signs comments locally, switches File Proxy,
       else throw new Error('Unexpected network request: ' + input);
       return new Response(JSON.stringify(result));
     };
-    for (const name of ['chisel.js', 'chisel.sign.js', 'chisel.identity.js']) w.eval(await readFile(new URL('onboard/vendor/' + name, root), 'utf8'));
+    for (const name of ['chisel.js', 'chisel.sign.js', 'noble-secp256k1-3.2.0.browser.js', 'chisel.secp256k1.js', 'chisel.secp256k1.noble.js', 'chisel.sign.backend.js', 'chisel.identity.js']) w.eval(await readFile(new URL('onboard/vendor/' + name, root), 'utf8'));
     const build = await esbuild.build({ entryPoints: [fileURLToPath(new URL('world/world.js', root))], bundle: true, write: false, format: 'iife', platform: 'browser', target: 'es2020', define: { 'import.meta.url': JSON.stringify('https://johnrigler.github.io/lantern/onboard/wallet.js') } });
     w.eval(build.outputFiles[0].text);
     await until(() => $('feedStatus').textContent.startsWith('Connected'));

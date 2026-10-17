@@ -7,7 +7,7 @@ import { openIdentity, verifyComment, saveComment, loadComments, commentPath, CO
 import { fromPrivateHex } from '../onboard/wallet.js';
 
 globalThis.window = globalThis;
-for (const file of ['chisel.js', 'chisel.sign.js', 'chisel.identity.js']) vm.runInThisContext(await readFile(new URL('../onboard/vendor/' + file, import.meta.url), 'utf8'));
+for (const file of ['chisel.js', 'chisel.sign.js', 'noble-secp256k1-3.2.0.browser.js', 'chisel.secp256k1.js', 'chisel.secp256k1.noble.js', 'chisel.sign.backend.js', 'chisel.identity.js']) vm.runInThisContext(await readFile(new URL('../onboard/vendor/' + file, import.meta.url), 'utf8'));
 const KEY = '1'.padStart(64, '0'); // Public test fixture only.
 const WIF = 'KwDiBf89QgGbjEhKnhXJuH7LrciVrZi3qYjgd9M7rFU73sVHnoWn';
 const response = (body, status = 200) => new Response(JSON.stringify(body), { status });
@@ -75,4 +75,14 @@ test('File Proxy invokes a browser-native fetch with the global receiver', async
     return new Response(JSON.stringify({ ok: true, items: [] }));
   });
   assert.deepEqual(await proxy.list('zorkmid/comments'), []);
+});
+
+test('world comments use Noble and reject a mathematically equivalent high-S signature', async () => {
+  assert.equal(CHISEL.getSigningBackend(), 'noble');
+  const identity = await openIdentity(WIF), envelope = await identity.signComment('Signature fixture');
+  const twin = structuredClone(envelope), signature = twin.proof.signature;
+  const order = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141n;
+  twin.proof.signature = signature.slice(0, 64) + (order - BigInt('0x' + signature.slice(64))).toString(16).padStart(64, '0');
+  assert.equal(await verifyComment(twin), false); assert.equal(await verifyComment(envelope), true);
+  identity.signOut();
 });

@@ -105,3 +105,5 @@ latest-release pointer, or deliver background announcements. Chisel's existing
 image encoder uses a Base57 palette; no new “Base53” protocol is introduced.
 The shared Zorkmid view can then merge recognised deployments on other chains,
 with each asset and network labelled explicitly.
+
+Shared Chisel signing uses the pinned local Noble backend. Existing WIFs, eCash addresses and valid comment proofs remain compatible. See [the source record](vendor/CHISEL-SOURCE.md) for provenance and checksums.
