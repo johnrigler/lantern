@@ -1,7 +1,20 @@
-/* Pixel-aligned QR codes, detailed monochrome avatars, and a folded CTP500 wallet. */
+/* Pixel-aligned QR codes, profile avatars, and a folded CTP500 wallet. */
 import { publicProfile, shortId } from './wallet.js';
 
 export const ACCENTS = ['#e6b45d', '#8ed1a2', '#85bfee', '#c0a2e8'];
+let symbolPromise;
+export function loadZorkmidSymbol() {
+  if (!symbolPromise) symbolPromise = new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => {
+      symbolPromise = null;
+      reject(new Error('The Zorkmid print symbol did not load. Reload the page and try again.'));
+    };
+    image.src = new URL('../assets/zorkmid-symbol.webp', import.meta.url).href;
+  });
+  return symbolPromise;
+}
 export function browserCanvas(width, height) {
   const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height; return canvas;
 }
@@ -93,9 +106,10 @@ function fitText(ctx, text, x, y, startSize, maxWidth, bold = false) {
 }
 
 export function createIdentityArtwork(wallet, profile, identityUrl, {
-  createCanvas = browserCanvas, makeQr = makeQrCanvas,
+  createCanvas = browserCanvas, makeQr = makeQrCanvas, zorkmidSymbol,
 } = {}) {
   if (!wallet?.wif || !wallet?.address) throw new Error('Create an eCash ID first.');
+  if (!zorkmidSymbol) throw new Error('Load the Zorkmid print symbol before creating the card.');
   const appearance = publicProfile(profile), name = appearance.name || 'WANDERER ' + shortId(wallet.address);
   const publicCard = createCanvas(640, 384), pub = publicCard.getContext('2d');
   pub.fillStyle = '#fff'; pub.fillRect(0, 0, 640, 384); pub.fillStyle = '#000';
@@ -103,7 +117,9 @@ export function createIdentityArtwork(wallet, profile, identityUrl, {
   pub.font = 'bold 28px sans-serif'; pub.fillText('ZORKMID // YOUR ID', 320, 12);
   fitText(pub, name, 320, 49, 19, 592, true);
   pub.drawImage(makeQr(identityUrl, 240, createCanvas), 200, 72);
-  drawAvatar(pub, 42, 125, 112, appearance.avatar, true);
+  // The emblem follows the card's rotation; profile avatars remain on screen.
+  pub.save(); pub.imageSmoothingEnabled = true; pub.imageSmoothingQuality = 'high';
+  pub.drawImage(zorkmidSymbol, 42, 125, 112, 112); pub.restore();
   pub.font = 'bold 15px sans-serif'; pub.fillText('OPEN YOUR ID / RECEIVE XEC', 320, 307);
   fitText(pub, wallet.address, 320, 331, 19, 596);
   const url = new URL(identityUrl);

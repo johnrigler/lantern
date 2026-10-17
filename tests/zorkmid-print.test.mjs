@@ -31,6 +31,14 @@ async function environment(page = 'onboard/index.html', href = 'https://johnrigl
   w.confirm = () => true;
   w.HTMLElement.prototype.scrollIntoView = () => {};
   w.matchMedia = () => ({ matches: false });
+  const symbolBytes = await readFile(new URL('assets/zorkmid-symbol.webp', root));
+  w.Image = class extends canvas.Image {
+    set src(value) {
+      assert.match(value, /\/assets\/zorkmid-symbol\.webp$/);
+      super.src = symbolBytes;
+    }
+    get src() { return super.src; }
+  };
   Object.defineProperty(w.navigator, 'clipboard', { value: { async writeText(text) { w.copiedText = text; } } });
   w.HTMLCanvasElement.prototype.getContext = function (type) {
     if (type !== '2d') return null;
@@ -95,14 +103,15 @@ function decodedRaster(bytes, expectedHeight) {
   return image;
 }
 
-test('printed raster retains both decodable QRs; the public panel is independent of WIF', options, async () => {
+test('printed raster retains both decodable QRs and uses the emblem regardless of profile avatar', options, async () => {
   const f = await environment();
-  const entry = `import {createIdentityArtwork} from './onboard/artwork.js';\nimport {buildIdentityUrl} from './onboard/wallet.js';\nimport {ctp500PreparePrint} from './onboard/printer/ctp500-print.js';\nwindow.qa={createIdentityArtwork,buildIdentityUrl,ctp500PreparePrint};`;
+  const entry = `import {createIdentityArtwork,loadZorkmidSymbol} from './onboard/artwork.js';\nimport {buildIdentityUrl} from './onboard/wallet.js';\nimport {ctp500PreparePrint} from './onboard/printer/ctp500-print.js';\nwindow.qa={createIdentityArtwork,loadZorkmidSymbol,buildIdentityUrl,ctp500PreparePrint};`;
   f.w.eval(await bundle('onboard/artwork.js', f.w.location.href, entry));
   const qa = f.w.qa;
+  const artworkOptions = { zorkmidSymbol: await qa.loadZorkmidSymbol() };
   const publicUrl = qa.buildIdentityUrl(ONE_ADDRESS, { name: 'Sample Wanderer', avatar: '312' }, 'https://johnrigler.github.io/zorkmid/id.html');
-  const artwork = qa.createIdentityArtwork({ address: ONE_ADDRESS, wif: ONE_WIF }, { name: 'Sample Wanderer', avatar: '312' }, publicUrl);
-  const altered = qa.createIdentityArtwork({ address: ONE_ADDRESS, wif: ONE_WIF.slice(0, -1) + 'x' }, { name: 'Sample Wanderer', avatar: '312' }, publicUrl);
+  const artwork = qa.createIdentityArtwork({ address: ONE_ADDRESS, wif: ONE_WIF }, { name: 'Sample Wanderer', avatar: '312' }, publicUrl, artworkOptions);
+  const altered = qa.createIdentityArtwork({ address: ONE_ADDRESS, wif: ONE_WIF.slice(0, -1) + 'x' }, { name: 'Sample Wanderer', avatar: '000' }, publicUrl, artworkOptions);
   assert.equal(artwork.publicCard.toDataURL(), altered.publicCard.toDataURL());
   assert.equal(artwork.receipt.width, 384); assert.equal(artwork.receipt.height, 1280);
   const job = qa.ctp500PreparePrint(artwork.receipt, { mode: 'fast' });

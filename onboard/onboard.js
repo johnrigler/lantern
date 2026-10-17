@@ -1,10 +1,11 @@
 import { createWallet, restoreWallet, publicProfile, shortId, defaultIdPage, buildIdentityUrl } from './wallet.js';
-import { drawAvatar, makeQrCanvas, createIdentityArtwork } from './artwork.js';
+import { drawAvatar, makeQrCanvas, createIdentityArtwork, loadZorkmidSymbol } from './artwork.js?v=20261017-symbol1';
 import { ctp500ConnectPrinter, ctp500PreparePrint, ctp500BeginPrintSession } from './printer/ctp500-print.js';
 
 const $ = id => document.getElementById(id);
 const fields = ['displayName', 'avatarKind', 'avatarHat', 'avatarAccent', 'idPage'];
 let wallet = null, printer = null, job = null, publicUrl = '', busy = false, printing = false, backedUp = false;
+let zorkmidSymbol;
 $('idPage').value = defaultIdPage();
 
 function profile() {
@@ -58,7 +59,7 @@ function refreshCard() {
   const receive = $('receiveQr');
   receive.getContext('2d').drawImage(makeQrCanvas(wallet.address, receive.width), 0, 0);
   const link = buildIdentityUrl(wallet.address, appearance, $('idPage').value.trim());
-  const artwork = createIdentityArtwork(wallet, appearance, link);
+  const artwork = createIdentityArtwork(wallet, appearance, link, { zorkmidSymbol });
   job = ctp500PreparePrint(artwork.receipt, { mode: $('printMode').value });
   publicUrl = link;
   $('identityLink').href = link; $('identityLink').textContent = link;
@@ -73,6 +74,7 @@ function canReplace() {
   return !wallet || backedUp || window.confirm('This replaces the current recovery key in this tab. Have you printed or saved it?');
 }
 async function installWallet(next) {
+  zorkmidSymbol = await loadZorkmidSymbol();
   wallet = next; backedUp = false;
   $('restoreWif').value = '';
   $('recoveryDetails').open = false; $('previewDetails').open = false;

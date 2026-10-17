@@ -21,15 +21,16 @@ identity page is [`../id.html`](../id.html).
 ## What gets printed
 
 - **Private fold:** mainnet WIF QR and text, clearly labelled eCash/XEC.
-- **Public fold:** a Zorkmid public ID URL QR, avatar, receiving address, and
+- **Public fold:** a Zorkmid public ID URL QR, Zorkmid emblem, receiving address, and
   project host/path. Opening the ID URL displays a wallet-scannable receiving QR.
 - **Save public card** exports only the public panel. **Save folded wallet
   (private)** exports the whole receipt, including its recovery key.
 
-Avatar curves are rendered at the output resolution rather than enlarged from a
-16 × 16 sprite. The printed avatar is 112 dots wide. Every character, headwear,
-and mark option is distinct in monochrome. QR modules retain integer pixel edges
-and their existing sizes and quiet zones.
+The public fold uses the original stone Z emblem, optimized in
+`../assets/zorkmid-symbol.webp` and rendered at 112 dots wide. It rotates with
+the whole card so it is upright on the folded ID. Personal avatars still appear
+in the on-screen profile and public ID page. QR modules retain integer pixel
+edges and their existing sizes and quiet zones.
 
 The artwork uses the same 384 × 1280 dot sideways/folded layout as Chisel's
 current key printer. Printer modules are copied unchanged from Chisel's
