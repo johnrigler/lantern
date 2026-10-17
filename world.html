@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Play Lantern inside Zorkmid, join the signed conversation, and etch a note on eCash with Chisel.">
+  <title>Zorkmid · The world outside the game</title>
+  <link rel="stylesheet" href="world/world.css?v=20261017-world1">
+</head>
+<body data-view="play">
+  <header class="world-header">
+    <a class="brand" href="./"><span class="sigil" aria-hidden="true">✦</span><span>ZORKMID<small>A WORLD IN COMMON</small></span></a>
+    <div class="account"><canvas id="accountAvatar" width="64" height="64" aria-label="Your avatar" role="img"></canvas><div><strong id="accountName">Wanderer</strong><span id="accountAddress">Looking around · signed out</span></div></div>
+    <button id="loginOpen" type="button">Sign in</button><button id="logout" type="button" hidden>Sign out</button>
+  </header>
+  <nav class="world-nav" aria-label="World areas">
+    <button type="button" data-view="play" aria-pressed="true">Lantern</button>
+    <button type="button" data-view="activity" aria-pressed="false">Outside <span id="unread" class="badge" hidden></span></button>
+    <button type="button" data-view="etch" aria-pressed="false">Chisel · eCash</button>
+    <button type="button" data-view="settings" aria-pressed="false">Connections</button>
+    <a href="onboard/">Print an ID ↗</a>
+  </nav>
+  <main class="world-grid">
+    <section id="playPanel" class="workspace game-panel" aria-label="Lantern game">
+      <div class="panel-heading"><div><span class="eyebrow">THE LANTERN IS LIT</span><h1>Step into the story.</h1></div><span class="quiet">Your game stays here when you step outside.</span></div>
+      <iframe id="gameFrame" src="lantern.html?embedded=1" title="Lantern text adventure" allow="clipboard-write" referrerpolicy="same-origin"></iframe>
+    </section>
+    <section id="etchPanel" class="workspace tool-panel" aria-labelledby="etchHeading" hidden>
+      <span class="eyebrow">CHISEL / eCASH MAINNET</span><h1 id="etchHeading">Leave a mark.</h1>
+      <p>Etch a short note or an <code>ipfs://</code> address into an eCash transaction. The text will be public and permanent.</p>
+      <p class="quiet">This writes a pointer. Keep the IPFS content pinned so it remains available.</p>
+      <form id="etchForm">
+        <label for="etchNote">Note or IPFS address</label><textarea id="etchNote" rows="4" maxlength="180" placeholder="ipfs://bafy…" required></textarea>
+        <div class="field-footer"><span id="noteBytes">0 / 180 UTF-8 bytes</span><span>Paid in native XEC</span></div>
+        <button id="prepareEtch" type="submit">Prepare for review</button>
+      </form>
+      <p id="etchStatus" role="status" class="status">Sign in with your printed recovery key to use Chisel.</p>
+      <section id="etchReview" class="review" aria-label="Transaction review" hidden>
+        <h2>Review your etch</h2><dl><dt>Public text</dt><dd id="reviewNote"></dd><dt>From / change to</dt><dd id="reviewAddress" class="mono"></dd><dt>Network fee</dt><dd id="reviewFee"></dd><dt>Returned to you</dt><dd id="reviewChange"></dd><dt>Transaction ID</dt><dd id="reviewTxid" class="mono"></dd></dl>
+        <p class="quiet">Only non-token funds are used. Nothing is sent until you choose Broadcast.</p>
+        <button id="broadcastEtch" type="button">Broadcast on eCash mainnet</button>
+        <button id="cancelEtch" type="button" class="secondary">Discard</button>
+      </section>
+      <a id="etchExplorer" href="#" target="_blank" rel="noopener noreferrer" hidden>Check this transaction ↗</a>
+      <p class="quiet">Chisel signs locally using Bitcoin ABC’s eCash library. One XEC is 100 satoshis.</p>
+    </section>
+    <section id="settingsPanel" class="workspace tool-panel" aria-labelledby="settingsHeading" hidden>
+      <span class="eyebrow">YOUR CONNECTIONS</span><h1 id="settingsHeading">Choose where you meet.</h1>
+      <p>Use your own File Proxy or a compatible shared service. People using the same endpoint and directory see the same conversation.</p>
+      <form id="settingsForm">
+        <label for="proxyUrl">File Proxy URL</label><input id="proxyUrl" type="url" required autocomplete="off">
+        <label for="proxyDirectory">Public comment directory</label><input id="proxyDirectory" required autocomplete="off" maxlength="120">
+        <label for="chronikUrl">eCash Chronik URL</label><input id="chronikUrl" type="url" required autocomplete="off">
+        <button type="submit">Use these connections</button>
+      </form>
+      <p id="settingsStatus" class="status" role="status"></p>
+      <p class="quiet">Connection choices are saved on this device. Comments are public signed files on File Proxy; its operator controls availability. Signatures identify the wallet, not the person. The eCash service receives your public address when you refresh or prepare an etch.</p>
+      <p class="quiet">Lantern saves use the selected File Proxy too. Changing views or connections keeps your game open.</p>
+      <a href="https://github.com/johnrigler/zorkmid" target="_blank" rel="noopener noreferrer">Zorkmid source ↗</a>
+    </section>
+    <aside id="activityPanel" class="activity-panel" aria-labelledby="activityHeading">
+      <div class="activity-top"><div><span class="eyebrow">THE WORLD GOES ON</span><h2 id="activityHeading">Outside the story</h2></div><button id="refreshComments" type="button" class="icon-button" aria-label="Refresh comments">↻</button></div>
+      <p id="feedStatus" class="status" role="status">Connecting to File Proxy…</p>
+      <form id="commentForm">
+        <label for="commentText">Add your voice</label><textarea id="commentText" rows="3" maxlength="1000" placeholder="A discovery, a question, a hello…" required></textarea>
+        <div class="compose-actions"><span id="commentHint" class="quiet">Sign in to post.</span><button id="postComment" type="submit">Sign & post</button></div>
+      </form>
+      <p id="postStatus" class="status" role="status"></p>
+      <div id="commentFeed" class="comment-feed" aria-live="polite"></div>
+      <details class="native-details"><summary>eCash activity</summary><p id="nativeStatus" class="quiet">Sign in, then refresh to see this address on eCash.</p><button id="refreshNative" type="button" class="secondary">Refresh eCash</button><div id="nativeFeed"></div></details>
+      <p class="service-footnote">Verified signatures · latest 40 comments<br>Updates while this page is open.</p>
+    </aside>
+  </main>
+  <dialog id="loginDialog" aria-labelledby="loginHeading">
+    <form id="loginForm"><span class="eyebrow">YOUR PRINTED ID IS YOUR KEY</span><h2 id="loginHeading">Return to Zorkmid.</h2>
+      <p>Use the private recovery WIF from inside your folded ID. It stays in this tab’s memory.</p>
+      <label for="loginWif">Private recovery key (WIF)</label><input id="loginWif" type="password" required autocomplete="off" autocapitalize="off" spellcheck="false">
+      <label for="loginName">Public name</label><input id="loginName" maxlength="24" autocomplete="off" placeholder="Wanderer">
+      <label for="loginAvatar">Character</label><select id="loginAvatar"><option value="0">Explorer</option><option value="1">Mage</option><option value="2">Robot</option><option value="3">Raven</option></select>
+      <p id="loginStatus" class="status" role="status"></p><div class="dialog-actions"><button id="loginSubmit" type="submit">Sign in locally</button><button id="loginCancel" type="button" class="secondary">Cancel</button></div>
+      <a href="onboard/">New here? Create and print an ID ↗</a>
+    </form>
+  </dialog>
+  <script src="onboard/vendor/chisel.js"></script><script src="onboard/vendor/chisel.sign.js"></script><script src="onboard/vendor/chisel.identity.js"></script>
+  <script type="module" src="world/world.js?v=20261017-world1"></script>
+</body>
+</html>

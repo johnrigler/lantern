@@ -1,3 +1,12 @@
+## Zorkmid world / eCash ID
+
+Open [the Zorkmid world](https://johnrigler.github.io/lantern/world.html) to play
+Lantern while keeping the wider conversation nearby. Sign in with your printed
+ID, post locally signed comments through a configurable File Proxy, or open
+Chisel to prepare and explicitly broadcast a native eCash note/IPFS URI.
+[Create and print an ID](https://johnrigler.github.io/lantern/onboard/) uses detailed
+monochrome avatars for the CTP500. [World documentation](world/README.md).
+
 # Zorkmid
 
 **Create an eCash identity and print a Zorkmid card:** open the website and choose

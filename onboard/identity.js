@@ -16,7 +16,9 @@ function show(input) {
   document.title = (next.name || 'ID ' + shortId(next.address)) + ' · Zorkmid';
   // Discard unrelated query/fragment parameters instead of sharing them onward.
   history.replaceState(null, '', cleanLink);
-  identity = next; publicLink = cleanLink; status('');
+  identity = next; publicLink = cleanLink;
+  const world = new URL('world.html', location.href); world.searchParams.set('address', next.address); world.hash = new URL(cleanLink).hash;
+  $('enterWorld').href = world.href; status('');
 }
 try {
   if (new URL(location.href).searchParams.has('address')) show(location.href);

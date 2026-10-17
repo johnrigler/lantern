@@ -264,9 +264,9 @@ dialog::backdrop { background: rgba(0,0,0,.72); }
   </form>
 </dialog>
 
-<script src="https://johnrigler.github.io/chisel/chisel.js?rev=20260906b"></script>
-<script src="https://johnrigler.github.io/chisel/chisel.sign.js?rev=20260906b"></script>
-<script src="https://johnrigler.github.io/chisel/chisel.identity.js?rev=20261003c"></script>
+<script src="onboard/vendor/chisel.js"></script>
+<script src="onboard/vendor/chisel.sign.js"></script>
+<script src="onboard/vendor/chisel.identity.js"></script>
 <script>
 (() => {
   const game = document.getElementById("game");
@@ -301,7 +301,6 @@ dialog::backdrop { background: rgba(0,0,0,.72); }
   const mySavesList = document.getElementById("mySavesList");
   const mySavesClose = document.getElementById("mySavesClose");
 
-  const FILE_PROXY_URL = "https://rigler.org/fileproxy";
   const CHISEL_IDENTITY_URL = "https://johnrigler.github.io/chisel/identity.html";
   const IDENTITY_STORAGE_KEY = "lantern.chiselIdentity.v1";
   const PENDING_SIGNED_SAVE_KEY = "lantern.pendingSignedSave.v1";
@@ -399,7 +398,14 @@ dialog::backdrop { background: rgba(0,0,0,.72); }
     element.title = identity || "";
   }
 
+  function worldBridge() {
+    try { return window.parent !== window ? window.parent.zorkmidWorld : null; } catch { return null; }
+  }
+  window.addEventListener('zorkmid-identity-changed', () => { readIdentity(); });
+
   function readIdentity() {
+    const world = worldBridge();
+    if (world) { chiselIdentity = world.getIdentity(); mySaves.hidden = !chiselIdentity; return; }
     const params = new URLSearchParams(window.location.search);
     const incoming = String(params.get("identity") || "").trim();
     const signingReturn = Boolean(params.get("signature"));
@@ -418,15 +424,16 @@ dialog::backdrop { background: rgba(0,0,0,.72); }
     window.history.replaceState(null, "", clean);
   }
 
+  async function selectedFileProxy() {
+    const { FileProxy, readSettings } = await import('./world/file-proxy.js');
+    return new FileProxy(readSettings().proxy);
+  }
+
   async function fileProxyPost(path, body) {
-    const response = await fetch(FILE_PROXY_URL + path, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok || data.error) throw new Error(data.error || ("HTTP " + response.status));
-    return data;
+    const proxy = await selectedFileProxy();
+    if (path === '/list') return { list: await proxy.list(body.dirname) };
+    if (path === '/load') return JSON.parse(await proxy.load(body.filename, 512000));
+    throw new Error('Unknown File Proxy action.');
   }
 
   async function saveSignedEnvelope(envelope) {
@@ -439,17 +446,20 @@ dialog::backdrop { background: rgba(0,0,0,.72); }
       .map(value => value.toString(16).padStart(2, "0")).join("");
     const filename = (session.game || "lantern") + "-" + Date.now() + "-" + random + ".lantern.json";
     const path = identityDirectory(identity) + "/" + filename;
-    const response = await fetch(FILE_PROXY_URL + "/save?filename=" + encodeURIComponent(path), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(envelope)
-    });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok || data.error) throw new Error(data.error || ("HTTP " + response.status));
-    return data;
+    const proxy = await selectedFileProxy();
+    return proxy.save(path, JSON.stringify(envelope));
   }
 
   async function beginSignedSave(session) {
+    const world = worldBridge();
+    if (world?.getIdentity()) {
+      const envelope = await world.signGameSave({ savedAt: new Date().toISOString(), session });
+      await saveSignedEnvelope(envelope);
+      if (saveDialog.open) saveDialog.close();
+      status.textContent = 'Signed with your Zorkmid ID and saved to the selected File Proxy.';
+      await refreshMySaves();
+      return;
+    }
     if (!window.CHISEL || typeof CHISEL.artifactDigest !== "function") {
       throw new Error("Chisel signing support is unavailable.");
     }

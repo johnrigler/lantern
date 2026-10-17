@@ -1,7 +1,7 @@
 # Zorkmid eCash ID / CTP500 onboarding
 
 Open [`onboard/`](index.html) to create an eCash (XEC / Bitcoin ABC) mainnet
-receiving identity, choose a small avatar, and print a folded card. The public
+receiving identity, choose a detailed monochrome avatar, and print a folded card. The public
 identity page is [`../id.html`](../id.html).
 
 1. Choose an optional public name and avatar, then **Create eCash ID**. A new
@@ -10,7 +10,8 @@ identity page is [`../id.html`](../id.html).
    uncompressed mainnet WIFs and preserves the corresponding receiving address.
 2. Fund the displayed `ecash:` address with native **XEC**. This is not a Zorkmid
    token mint or a token sale. The page creates and restores receive/recovery
-   wallets; transaction construction and spending are not implemented here.
+   wallets. Open **Enter Zorkmid** from the public ID page to use Chisel’s separate
+   review-and-broadcast eCash note tool.
 3. Connect **Teal Printer** over Bluetooth (or Serial on a compatible desktop).
    Close InstaPrint and other printer connections first.
 4. **Print ID card**, keep the page open while transmitting, and check the paper.
@@ -25,6 +26,11 @@ identity page is [`../id.html`](../id.html).
 - **Save public card** exports only the public panel. **Save folded wallet
   (private)** exports the whole receipt, including its recovery key.
 
+Avatar curves are rendered at the output resolution rather than enlarged from a
+16 × 16 sprite. The printed avatar is 112 dots wide. Every character, headwear,
+and mark option is distinct in monochrome. QR modules retain integer pixel edges
+and their existing sizes and quiet zones.
+
 The artwork uses the same 384 × 1280 dot sideways/folded layout as Chisel's
 current key printer. Printer modules are copied unchanged from Chisel's
 `print4` / `ble3` baseline; fast mode uses short raster bands, 20-byte packets,
@@ -38,7 +44,7 @@ provide background printing after the tab closes.
 The public page is `id.html?address=ecash%3A…#avatar=000`, with an optional
 `name` in the fragment. Its builder explicitly selects public fields; it never
 serializes a wallet object. The public page does not load Chisel's key/signing
-code. Avatar codes represent character, headwear, and color. Appearance in a
+code. Avatar codes represent character, headwear, and a monochrome mark (sun, moon, star, compass). Appearance in a
 link is not a signed profile or proof of identity control.
 
 All application resources and navigation are relative. When opened on GitHub
@@ -83,11 +89,13 @@ Run `node --test tests/zorkmid-wallet.test.mjs` from the repo root for key and
 public-link checks. Optional artwork/DOM/QR checks are described in the test
 file and use development dependencies; none are loaded by the application.
 
-## Later ledger integration
+## World and ledger integration
 
-The current page does not broadcast, etch an avatar, resolve a release pointer,
-or subscribe to announcements. Those can use Chisel records under the same
-identity after the wallet/print path is exercised on a phone. Chisel's existing
+The onboarding page creates and prints IDs. The surrounding [Zorkmid world](../world.html)
+now keeps Lantern open beside verified File Proxy comments and provides a Chisel
+eCash note/IPFS-URI tool with an explicit transaction review and broadcast action.
+See [world/README.md](../world/README.md). It does not yet etch avatars, resolve a
+latest-release pointer, or deliver background announcements. Chisel's existing
 image encoder uses a Base57 palette; no new “Base53” protocol is introduced.
 The shared Zorkmid view can then merge recognised deployments on other chains,
 with each asset and network labelled explicitly.
