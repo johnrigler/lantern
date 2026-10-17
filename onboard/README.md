@@ -27,7 +27,8 @@ identity page is [`../id.html`](../id.html).
   (private)** exports the whole receipt, including its recovery key.
 
 The public fold uses the original stone Z emblem, optimized in
-`../assets/zorkmid-symbol.webp` and rendered at 112 dots wide. It rotates with
+`../assets/zorkmid-symbol.webp` and rendered at 240 dots wide, the same size as
+the public QR code beside it. It rotates with
 the whole card so it is upright on the folded ID. Personal avatars still appear
 in the on-screen profile and public ID page. QR modules retain integer pixel
 edges and their existing sizes and quiet zones.

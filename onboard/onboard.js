@@ -1,5 +1,5 @@
 import { createWallet, restoreWallet, publicProfile, shortId, defaultIdPage, buildIdentityUrl } from './wallet.js';
-import { drawAvatar, makeQrCanvas, createIdentityArtwork, loadZorkmidSymbol } from './artwork.js?v=20261017-symbol1';
+import { drawAvatar, makeQrCanvas, createIdentityArtwork, loadZorkmidSymbol } from './artwork.js?v=20261017-symbol2';
 import { ctp500ConnectPrinter, ctp500PreparePrint, ctp500BeginPrintSession } from './printer/ctp500-print.js';
 
 const $ = id => document.getElementById(id);

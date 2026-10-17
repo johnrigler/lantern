@@ -116,14 +116,14 @@ export function createIdentityArtwork(wallet, profile, identityUrl, {
   pub.textAlign = 'center'; pub.textBaseline = 'top'; pub.imageSmoothingEnabled = false;
   pub.font = 'bold 28px sans-serif'; pub.fillText('ZORKMID // YOUR ID', 320, 12);
   fitText(pub, name, 320, 49, 19, 592, true);
-  pub.drawImage(makeQr(identityUrl, 240, createCanvas), 200, 72);
+  pub.drawImage(makeQr(identityUrl, 240, createCanvas), 352, 72);
   // The emblem follows the card's rotation; profile avatars remain on screen.
   pub.save(); pub.imageSmoothingEnabled = true; pub.imageSmoothingQuality = 'high';
-  pub.drawImage(zorkmidSymbol, 42, 125, 112, 112); pub.restore();
-  pub.font = 'bold 15px sans-serif'; pub.fillText('OPEN YOUR ID / RECEIVE XEC', 320, 307);
-  fitText(pub, wallet.address, 320, 331, 19, 596);
+  pub.drawImage(zorkmidSymbol, 48, 72, 240, 240); pub.restore();
+  pub.font = 'bold 15px sans-serif'; pub.fillText('OPEN YOUR ID / RECEIVE XEC', 320, 316);
+  fitText(pub, wallet.address, 320, 339, 19, 596);
   const url = new URL(identityUrl);
-  fitText(pub, url.host + url.pathname, 320, 360, 14, 592);
+  fitText(pub, url.host + url.pathname, 320, 364, 14, 592);
 
   const landscape = createCanvas(1280, 384), ctx = landscape.getContext('2d');
   ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 1280, 384); ctx.fillStyle = '#000';

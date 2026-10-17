@@ -119,8 +119,8 @@ test('printed raster retains both decodable QRs and uses the emblem regardless o
   const landscape = canvas.createCanvas(1280, 384), ctx = landscape.getContext('2d');
   ctx.translate(0, 384); ctx.rotate(-Math.PI / 2); ctx.drawImage(raster, 0, 0);
   assert.equal(scan(crop(landscape, 208, 80, 224, 224)), ONE_WIF);
-  assert.equal(scan(crop(landscape, 840, 72, 240, 240)), publicUrl);
-  assert.equal(scan(crop(backing.get(artwork.publicCard), 200, 72, 240, 240)), publicUrl);
+  assert.equal(scan(crop(landscape, 992, 72, 240, 240)), publicUrl);
+  assert.equal(scan(crop(backing.get(artwork.publicCard), 352, 72, 240, 240)), publicUrl);
   if (process.env.ZORKMID_QA_OUTPUT) {
     await mkdir(process.env.ZORKMID_QA_OUTPUT, { recursive: true });
     await writeFile(process.env.ZORKMID_QA_OUTPUT + '/sample-public-card.png', backing.get(artwork.publicCard).toBuffer('image/png'));
