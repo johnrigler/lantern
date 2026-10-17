@@ -13,7 +13,7 @@ const WIF = 'KwDiBf89QgGbjEhKnhXJuH7LrciVrZi3qYjgd9M7rFU73sVHnoWn'; // Public fi
 async function until(predicate) { for (let i = 0; i < 250; i++) { if (predicate()) return; await new Promise(resolve => setTimeout(resolve, 5)); } assert.fail('UI did not settle'); }
 
 test('world keeps its game mounted, signs comments locally, switches File Proxy, and renders text safely', { skip: !(JSDOM && esbuild && canvas) }, async () => {
-  const dom = new JSDOM(await readFile(new URL('world.html', root), 'utf8'), { url: 'https://johnrigler.github.io/lantern/world.html', runScripts: 'outside-only', pretendToBeVisual: true });
+  const dom = new JSDOM(await readFile(new URL('world.html', root), 'utf8'), { url: 'https://johnrigler.github.io/lantern/world.html?game=zork3&start=1', runScripts: 'outside-only', pretendToBeVisual: true });
   const w = dom.window, $ = id => w.document.getElementById(id), stores = new Map(), writes = [];
   try {
     Object.defineProperty(w, 'crypto', { value: webcrypto });
@@ -41,6 +41,11 @@ test('world keeps its game mounted, signs comments locally, switches File Proxy,
     w.eval(build.outputFiles[0].text);
     await until(() => $('feedStatus').textContent.startsWith('Connected'));
     const frame = $('gameFrame'), frameWindow = frame.contentWindow; frameWindow.gameFixture = { sessionId: 'still-playing', moves: 19 };
+    assert.equal(new URL(frame.src).searchParams.get('game'), 'zork3');
+    assert.equal(new URL(frame.src).searchParams.get('start'), '1');
+    assert.equal($('loginAvatar'), null);
+    assert.equal($('accountSymbol').getAttribute('src'), 'assets/zorkmid-symbol.webp');
+
     for (const view of ['activity', 'etch', 'settings', 'play']) {
       w.document.querySelector('button[data-view="' + view + '"]').click();
       assert.equal(w.document.body.dataset.view, view); assert.equal($('gameFrame'), frame); assert.equal(frame.contentWindow, frameWindow);

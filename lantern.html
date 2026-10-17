@@ -159,29 +159,41 @@ dialog::backdrop { background: rgba(0,0,0,.72); }
   #screen { padding: 10px; margin-bottom: 8px; }
   .small { display: none; }
 }
+
+#gameChoices { display:grid; gap:8px; flex:0 0 auto; margin:0 0 12px; }
+.game-choice { display:grid; gap:5px; width:100%; padding:12px 14px; text-align:left; }
+.game-choice strong { font-size:15px; }
+.game-choice span { font-size:13px; color:#b5c5b6; }
+.game-choice:focus-visible { outline:2px solid #b6dda8; outline-offset:2px; }
+body.playing #gameChoices,body:not(.playing) #screen,body:not(.playing) #gameStatus,body:not(.playing) #commandForm { display:none; }
 </style>
 </head>
 <body>
 <main>
   <header>
     <h1>Lantern</h1>
-    <select id="game" aria-label="Game">
+    <select id="game" aria-label="Game" hidden>
       <option value="zork1">Zork I</option>
       <option value="zork2">Zork II</option>
       <option value="zork3">Zork III</option>
     </select>
-    <button id="newGame" type="button">New game</button>
+    <button id="newGame" type="button" hidden>New game</button>
     <button id="loadGameStart" type="button">Load game</button>
     <button id="settingsStart" type="button">Settings</button>
     <button id="mySaves" type="button" hidden>My saves</button>
   </header>
 
   <div id="status" aria-live="polite"></div>
+  <section id="gameChoices" aria-label="Choose a game">
+    <button class="game-choice" data-game="zork1" type="button"><strong>Zork 1 · The Great Underground Empire</strong><span>The game that started it all.</span></button>
+    <button class="game-choice" data-game="zork2" type="button"><strong>Zork 2 · The Wizard of Frobozz</strong><span>The next step downward to danger.</span></button>
+    <button class="game-choice" data-game="zork3" type="button"><strong>Zork 3 · The Dungeon Master</strong><span>It all comes down to this.</span></button>
+  </section>
   <div id="gameStatus" aria-live="polite">
     <span id="gameLocation">—</span>
     <span id="gameStats">Score: — · Moves: 0</span>
   </div>
-  <pre id="screen">Lantern browser client loading.</pre>
+  <pre id="screen">Choose a game above to start playing.</pre>
 
   <form id="commandForm">
     <input id="command" type="text" autocomplete="off" spellcheck="false"
@@ -632,6 +644,7 @@ dialog::backdrop { background: rgba(0,0,0,.72); }
   function setBusy(busy) {
     game.disabled = busy;
     newGame.disabled = busy;
+    document.querySelectorAll("button[data-game]").forEach(button => { button.disabled = busy; });
     loadGameStart.disabled = busy;
     command.disabled = busy || !sessionId;
     send.disabled = busy || !sessionId;
@@ -725,7 +738,7 @@ dialog::backdrop { background: rgba(0,0,0,.72); }
     } catch (err) {
       sessionId = null;
       screen.textContent = `Error: ${err.message}`;
-      status.textContent = "Could not start session.";
+      status.textContent = "Could not start game: " + err.message;
     } finally {
       setBusy(false);
       if (sessionId) {
@@ -904,11 +917,18 @@ dialog::backdrop { background: rgba(0,0,0,.72); }
     closeMovePad();
     const showing = !document.body.classList.contains("playing");
     document.body.classList.toggle("playing", showing);
-    if (!showing) game.focus();
+    if (!showing) document.querySelector("button[data-game]").focus();
     else command.focus();
   });
 
+  document.querySelectorAll('button[data-game]').forEach(button => button.addEventListener('click', () => {
+    game.value = button.dataset.game;
+    startGame();
+  }));
   newGame.addEventListener("click", startGame);
+  const launch = new URLSearchParams(window.location.search);
+  const requestedGame = launch.get('game');
+  if (['zork1', 'zork2', 'zork3'].includes(requestedGame)) game.value = requestedGame;
   readIdentity();
   (async () => {
     try {
@@ -920,6 +940,7 @@ dialog::backdrop { background: rgba(0,0,0,.72); }
       if (chiselIdentity) await refreshMySaves();
     }
     await health();
+    if (!sessionId && launch.get('start') === '1' && ['zork1', 'zork2', 'zork3'].includes(requestedGame)) await startGame();
   })();
 })();
 </script>

@@ -1,15 +1,16 @@
+import { createPrintPreview } from './printer/print-preview.js?v=20261017-menu1';
 import { createWallet, restoreWallet, publicProfile, shortId, defaultIdPage, buildIdentityUrl } from './wallet.js';
-import { drawAvatar, makeQrCanvas, createIdentityArtwork, loadZorkmidSymbol } from './artwork.js?v=20261017-symbol2';
+import { makeQrCanvas, createIdentityArtwork, loadZorkmidSymbol } from './artwork.js?v=20261017-symbol2';
 import { ctp500ConnectPrinter, ctp500PreparePrint, ctp500BeginPrintSession } from './printer/ctp500-print.js';
 
 const $ = id => document.getElementById(id);
-const fields = ['displayName', 'avatarKind', 'avatarHat', 'avatarAccent', 'idPage'];
+const fields = ['displayName', 'idPage'];
 let wallet = null, printer = null, job = null, publicUrl = '', busy = false, printing = false, backedUp = false;
-let zorkmidSymbol;
+let zorkmidSymbol, previewTurns = 3;
 $('idPage').value = defaultIdPage();
 
 function profile() {
-  return publicProfile({ name: $('displayName').value, avatar: $('avatarKind').value + $('avatarHat').value + $('avatarAccent').value });
+  return publicProfile({ name: $('displayName').value });
 }
 function status(id, text = '', bad = false) {
   $(id).textContent = text; $(id).classList.toggle('bad', bad);
@@ -39,7 +40,7 @@ async function run(action, statusId = 'walletStatus') {
 }
 function clearArtwork() {
   job = null; publicUrl = '';
-  for (const id of ['savePublic', 'saveWallet', 'identityLink']) { $(id).removeAttribute('href'); }
+  for (const id of ['savePublic', 'saveWallet', 'identityLink', 'openPreview']) { $(id).removeAttribute('href'); }
   $('receiptPreview').removeAttribute('src');
   $('identityLink').textContent = '';
   status('printDetails');
@@ -47,8 +48,6 @@ function clearArtwork() {
 }
 function refreshCard() {
   const appearance = profile();
-  const avatar = $('avatarPreview');
-  drawAvatar(avatar.getContext('2d'), 0, 0, avatar.width, appearance.avatar);
   if (!wallet) return;
   clearArtwork();
   $('identitySection').hidden = false;
@@ -63,13 +62,26 @@ function refreshCard() {
   job = ctp500PreparePrint(artwork.receipt, { mode: $('printMode').value });
   publicUrl = link;
   $('identityLink').href = link; $('identityLink').textContent = link;
-  $('receiptPreview').src = job.canvas.toDataURL('image/png');
-  $('saveWallet').href = $('receiptPreview').src;
+  $('saveWallet').href = job.canvas.toDataURL('image/png');
+  renderPreview();
   $('savePublic').href = artwork.publicCard.toDataURL('image/png');
   status('printDetails', '384 × ' + job.canvas.height + ' dots · ' + job.bytes.length.toLocaleString() + ' bytes'
     + (job.mode === 'fast' ? ' · estimated BLE transfer ' + Math.ceil(job.bytes.length / 800) + ' seconds; actual time varies.' : '.'));
   controls();
 }
+function renderPreview() {
+  if (!job) return;
+  const preview = createPrintPreview(job.canvas, previewTurns);
+  const src = preview.toDataURL('image/png');
+  $('receiptPreview').src = src;
+  $('openPreview').href = src;
+  $('previewOrientation').textContent = previewTurns === 3 ? 'Reading view.' : previewTurns === 0 ? 'Paper-feed view.' : 'Preview rotated ' + (previewTurns * 90) + '°.';
+}
+$('rotatePreview').addEventListener('click', () => {
+  if (busy || !job) return;
+  previewTurns = (previewTurns + 1) % 4;
+  renderPreview();
+});
 function canReplace() {
   return !wallet || backedUp || window.confirm('This replaces the current recovery key in this tab. Have you printed or saved it?');
 }
@@ -77,7 +89,7 @@ async function installWallet(next) {
   zorkmidSymbol = await loadZorkmidSymbol();
   wallet = next; backedUp = false;
   $('restoreWif').value = '';
-  $('recoveryDetails').open = false; $('previewDetails').open = false;
+  $('recoveryDetails').open = false; previewTurns = 3;
   $('printProgress').hidden = true; $('printProgress').value = 0;
   status('printStatus'); status('copyStatus');
   // Retain access to the recovery key even if an overly long link prevents artwork generation.

@@ -6,7 +6,7 @@
   <meta name="referrer" content="no-referrer">
   <title>Create your ID · Zorkmid</title>
   <meta name="description" content="Create a local eCash receiving identity and print a folded Zorkmid card on the CTP500.">
-  <link rel="stylesheet" href="style.css?v=20261017-world1">
+  <link rel="stylesheet" href="style.css?v=20261017-menu1">
 </head>
 <body>
 <header>
@@ -17,20 +17,15 @@
   <section class="intro">
     <p class="eyebrow">A key to carry / a place in the world</p>
     <h1>Create your Zorkmid ID.</h1>
-    <p>Choose your appearance, create an eCash wallet, and print your card. The public side opens your ID. Your recovery key folds behind it.</p>
+    <p>Add a name, create an eCash wallet, and preview your card before printing. The public side opens your ID. Your recovery key folds behind it.</p>
   </section>
   <section class="panel" aria-labelledby="appearanceHeading">
     <h2 id="appearanceHeading">1. Make it yours</h2>
     <div class="profile-grid">
-      <div class="avatar-frame"><canvas id="avatarPreview" width="96" height="96" role="img" aria-label="Your Zorkmid avatar"></canvas></div>
+      <img class="profile-symbol" src="../assets/zorkmid-symbol.webp" width="96" height="96" alt="Zorkmid">
       <div class="fields">
         <div><label for="displayName">Public name (optional)</label><input id="displayName" maxlength="24" placeholder="Wanderer" autocomplete="off"></div>
-        <div class="avatar-fields">
-          <div><label for="avatarKind">Character</label><select id="avatarKind"><option value="0">Explorer</option><option value="1">Mage</option><option value="2">Robot</option><option value="3">Raven</option></select></div>
-          <div><label for="avatarHat">Headwear</label><select id="avatarHat"><option value="0">None</option><option value="1">Cap</option><option value="2">Hood</option></select></div>
-          <div><label for="avatarAccent">Mark</label><select id="avatarAccent"><option value="0">Sun</option><option value="1">Moon</option><option value="2">Star</option><option value="3">Compass</option></select></div>
-        </div>
-        <p class="muted">Your name and avatar travel in the public ID link. They are not etched into the ledger yet.</p>
+        <p class="muted">Your public name travels in the ID link. Your card uses the Zorkmid symbol.</p>
       </div>
     </div>
     <div class="actions"><button id="createId" class="primary" type="button">Create eCash ID</button><span class="muted">eCash (XEC) · mainnet</span></div>
@@ -77,9 +72,16 @@
       <a id="savePublic" class="button secondary" download="zorkmid-public-id.png">Save public card</a>
       <a id="saveWallet" class="button secondary" download="zorkmid-private-wallet.png">Save folded wallet (private)</a>
     </div>
-    <details id="previewDetails" class="support"><summary>Full print preview — includes private key</summary>
+    <section class="card-preview" aria-labelledby="previewHeading">
+      <h3 id="previewHeading">Your print preview</h3>
+      <p class="muted">The complete folded wallet, including its private recovery key.</p>
+      <div class="actions preview-actions">
+        <button id="rotatePreview" class="secondary" type="button">Rotate preview 90°</button>
+        <a id="openPreview" class="button secondary" target="_blank" rel="noopener">Open full-size preview</a>
+      </div>
       <div class="print-preview"><img id="receiptPreview" alt="Folded Zorkmid identity card with private WIF and public ID"></div>
-    </details>
+      <p id="previewOrientation" class="muted"></p>
+    </section>
     <details class="support"><summary>Printer settings and public link</summary>
       <div class="fields">
         <div><label for="printMode">Print speed</label><select id="printMode"><option value="fast">Fast (recommended)</option><option value="acknowledged">Acknowledged writes</option><option value="compatibility">Compatibility</option></select></div>
@@ -95,6 +97,6 @@
 <script src="vendor/qrcode.min.js"></script>
 <script src="vendor/chisel.js"></script>
 <script src="vendor/chisel.sign.js"></script>
-  <script type="module" src="onboard.js?v=20261017-symbol2"></script>
+  <script type="module" src="onboard.js?v=20261017-menu1"></script>
 </body>
 </html>

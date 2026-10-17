@@ -4,12 +4,12 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Play Lantern inside Zorkmid, join the signed conversation, and etch a note on eCash with Chisel.">
   <title>Zorkmid · The world outside the game</title>
-  <link rel="stylesheet" href="world/world.css?v=20261017-world1">
+  <link rel="stylesheet" href="world/world.css?v=20261017-menu1">
 </head>
 <body data-view="play">
   <header class="world-header">
     <a class="brand" href="./"><span class="sigil" aria-hidden="true">✦</span><span>ZORKMID<small>A WORLD IN COMMON</small></span></a>
-    <div class="account"><canvas id="accountAvatar" width="64" height="64" aria-label="Your avatar" role="img"></canvas><div><strong id="accountName">Wanderer</strong><span id="accountAddress">Looking around · signed out</span></div></div>
+    <div class="account"><img id="accountSymbol" src="assets/zorkmid-symbol.webp" width="64" height="64" alt="Zorkmid"><div><strong id="accountName">Wanderer</strong><span id="accountAddress">Looking around · signed out</span></div></div>
     <button id="loginOpen" type="button">Sign in</button><button id="logout" type="button" hidden>Sign out</button>
   </header>
   <nav class="world-nav" aria-label="World areas">
@@ -75,12 +75,11 @@
       <p>Use the private recovery WIF from inside your folded ID. It stays in this tab’s memory.</p>
       <label for="loginWif">Private recovery key (WIF)</label><input id="loginWif" type="password" required autocomplete="off" autocapitalize="off" spellcheck="false">
       <label for="loginName">Public name</label><input id="loginName" maxlength="24" autocomplete="off" placeholder="Wanderer">
-      <label for="loginAvatar">Character</label><select id="loginAvatar"><option value="0">Explorer</option><option value="1">Mage</option><option value="2">Robot</option><option value="3">Raven</option></select>
       <p id="loginStatus" class="status" role="status"></p><div class="dialog-actions"><button id="loginSubmit" type="submit">Sign in locally</button><button id="loginCancel" type="button" class="secondary">Cancel</button></div>
       <a href="onboard/">New here? Create and print an ID ↗</a>
     </form>
   </dialog>
   <script src="onboard/vendor/chisel.js"></script><script src="onboard/vendor/chisel.sign.js"></script><script src="onboard/vendor/chisel.identity.js"></script>
-  <script type="module" src="world/world.js?v=20261017-world1"></script>
+  <script type="module" src="world/world.js?v=20261017-menu1"></script>
 </body>
 </html>

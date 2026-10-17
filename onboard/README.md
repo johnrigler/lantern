@@ -1,10 +1,10 @@
 # Zorkmid eCash ID / CTP500 onboarding
 
 Open [`onboard/`](index.html) to create an eCash (XEC / Bitcoin ABC) mainnet
-receiving identity, choose a detailed monochrome avatar, and print a folded card. The public
+receiving identity, preview its complete artwork on your phone, and print a folded card. The public
 identity page is [`../id.html`](../id.html).
 
-1. Choose an optional public name and avatar, then **Create eCash ID**. A new
+1. Choose an optional public name, then **Create eCash ID**. A new
    compressed secp256k1 key is generated using browser `crypto.getRandomValues`.
    **Restore an existing eCash WIF** also accepts valid compressed or
    uncompressed mainnet WIFs and preserves the corresponding receiving address.
@@ -12,7 +12,10 @@ identity page is [`../id.html`](../id.html).
    token mint or a token sale. The page creates and restores receive/recovery
    wallets. Open **Enter Zorkmid** from the public ID page to use Chisel’s separate
    review-and-broadcast eCash note tool.
-3. Connect **Teal Printer** over Bluetooth (or Serial on a compatible desktop).
+3. Review the visible full wallet preview. **Rotate preview 90°** changes the
+   viewing orientation; **Open full-size preview** opens the current view. The
+   saved wallet and printer stream retain the original roll layout.
+   Connect **Teal Printer** over Bluetooth (or Serial on a compatible desktop).
    Close InstaPrint and other printer connections first.
 4. **Print ID card**, keep the page open while transmitting, and check the paper.
    Fold the private half behind the public ID. The connection is reused for the
@@ -29,8 +32,8 @@ identity page is [`../id.html`](../id.html).
 The public fold uses the original stone Z emblem, optimized in
 `../assets/zorkmid-symbol.webp` and rendered at 240 dots wide, the same size as
 the public QR code beside it. It rotates with
-the whole card so it is upright on the folded ID. Personal avatars still appear
-in the on-screen profile and public ID page. QR modules retain integer pixel
+the whole card so it is upright on the folded ID. The same project symbol is used
+in the on-screen profile and public ID page; avatar creation is paused. QR modules retain integer pixel
 edges and their existing sizes and quiet zones.
 
 The artwork uses the same 384 × 1280 dot sideways/folded layout as Chisel's
@@ -46,8 +49,9 @@ provide background printing after the tab closes.
 The public page is `id.html?address=ecash%3A…#avatar=000`, with an optional
 `name` in the fragment. Its builder explicitly selects public fields; it never
 serializes a wallet object. The public page does not load Chisel's key/signing
-code. Avatar codes represent character, headwear, and a monochrome mark (sun, moon, star, compass). Appearance in a
-link is not a signed profile or proof of identity control.
+code. Legacy avatar codes remain readable for link/protocol compatibility, but the
+creator and login no longer offer avatar controls. The display name in a link
+is not a signed profile or proof of identity control.
 
 All application resources and navigation are relative. When opened on GitHub
 Pages, the default public ID URL uses the current project path. This keeps
@@ -65,8 +69,8 @@ required for key creation, validation, artwork, or printing.
 
 Keys remain only in the page's memory and generated private image. There is no
 localStorage, sessionStorage, analytics, server key submission, or automatic
-funding. The WIF is revealed only in an explicit private section or the full
-print preview. Preserve it before navigating away. JavaScript garbage
+funding. The print section displays the full wallet, including its private WIF. The
+separate private recovery section is still expandable. Preserve it before navigating away. JavaScript garbage
 collection does not offer guaranteed erasure of strings or downloaded images.
 
 WIF's `0x80` prefix is shared by several chains and does not uniquely identify

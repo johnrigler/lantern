@@ -2,6 +2,11 @@
 
 Open [world.html](../world.html) to keep Lantern mounted while moving between the
 game, the signed conversation, Chisel's eCash etching tool, and connection settings.
+A homepage game choice passes `game` and `start=1` into the same frame.
+[Game catalogue](../docs/game-catalogue.md). Avatar creation is paused; the
+account, comment, and public-ID views use the Zorkmid symbol. Legacy avatar
+fields remain part of compatible signed records.
+
 On a wide display, the activity pane stays beside the current workspace. On a
 phone, use **Outside** to read and post; the badge counts newly loaded comments.
 The page polls while visible every 30 seconds. These are in-page updates; there

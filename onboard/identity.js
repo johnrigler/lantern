@@ -1,5 +1,5 @@
 import { normalizeAddress, readIdentityUrl, buildIdentityUrl, shortId } from './wallet.js';
-import { drawAvatar, makeQrCanvas } from './artwork.js';
+import { makeQrCanvas } from './artwork.js';
 
 const $ = id => document.getElementById(id);
 let identity = null, publicLink = '';
@@ -10,7 +10,6 @@ function show(input) {
   $('identityAddress').textContent = next.address;
   $('identityName').textContent = next.name || 'Wanderer';
   $('identityShort').textContent = 'ID ' + shortId(next.address);
-  drawAvatar($('identityAvatar').getContext('2d'), 0, 0, 96, next.avatar);
   const qr = $('identityQr'); qr.getContext('2d').drawImage(makeQrCanvas(next.address, qr.width), 0, 0);
   $('identityCard').hidden = false; $('addressFormSection').hidden = true;
   document.title = (next.name || 'ID ' + shortId(next.address)) + ' · Zorkmid';

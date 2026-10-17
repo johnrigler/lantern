@@ -5,7 +5,7 @@
   <meta name="referrer" content="no-referrer">
   <title>Public ID · Zorkmid</title>
   <meta name="description" content="A public eCash receiving identity in the Zorkmid world.">
-  <link rel="stylesheet" href="onboard/style.css?v=20261017-world1">
+  <link rel="stylesheet" href="onboard/style.css?v=20261017-menu1">
 </head>
 <body>
 <header>
@@ -15,7 +15,7 @@
 <main>
   <section class="intro"><p class="eyebrow">Public identity / eCash mainnet</p><h1>A place in the world.</h1></section>
   <section id="identityCard" class="panel" hidden>
-    <div class="public-heading"><div class="avatar-frame"><canvas id="identityAvatar" width="96" height="96" role="img" aria-label="Zorkmid avatar"></canvas></div><div><span class="pill">eCash / XEC / mainnet</span><h1 id="identityName"></h1><p id="identityShort" class="muted"></p></div></div>
+    <div class="public-heading"><div class="avatar-frame"><img class="profile-symbol" src="assets/zorkmid-symbol.webp" width="96" height="96" alt="Zorkmid"></div><div><span class="pill">eCash / XEC / mainnet</span><h1 id="identityName"></h1><p id="identityShort" class="muted"></p></div></div>
     <div class="identity-grid support">
       <canvas id="identityQr" class="qr" width="240" height="240" role="img" aria-label="Scan to receive eCash"></canvas>
       <div><h2>Receive eCash</h2><p id="identityAddress" class="address"></p>
@@ -23,7 +23,7 @@
         <p class="muted print-help">Scan the QR with an eCash wallet or send native XEC to this address.</p>
       </div>
     </div>
-    <p class="muted support">The name and avatar are appearance choices in this link; they are not a signed ledger profile yet. This page contains no recovery key.</p>
+    <p class="muted support">The public name is a display choice in this link; they are not a signed ledger profile yet. This page contains no recovery key.</p>
   </section>
   <section id="addressFormSection" class="panel">
     <h2>Open an eCash identity</h2>
@@ -34,6 +34,6 @@
 </main>
 <footer>Zorkmid public ID · v0.1 · <a href="https://github.com/johnrigler/zorkmid">Project repository</a></footer>
 <script src="onboard/vendor/qrcode.min.js"></script>
-<script type="module" src="onboard/identity.js?v=20261017-world1"></script>
+<script type="module" src="onboard/identity.js?v=20261017-menu1"></script>
 </body>
 </html>

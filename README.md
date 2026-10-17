@@ -4,8 +4,7 @@ Open [the Zorkmid world](https://johnrigler.github.io/lantern/world.html) to pla
 Lantern while keeping the wider conversation nearby. Sign in with your printed
 ID, post locally signed comments through a configurable File Proxy, or open
 Chisel to prepare and explicitly broadcast a native eCash note/IPFS URI.
-[Create and print an ID](https://johnrigler.github.io/lantern/onboard/) uses detailed
-monochrome avatars for the CTP500. [World documentation](world/README.md).
+[Create and print an ID](https://johnrigler.github.io/lantern/onboard/) shows the full CTP500 card preview on your phone, with 90° view rotation. [World documentation](world/README.md).
 
 # Zorkmid
 
@@ -17,8 +16,8 @@ under `/zorkmid/` automatically uses that path in public ID links.
 
 The browser creates or restores an eCash (XEC / Bitcoin ABC) mainnet key, provides
 a public receiving identity at `id.html?address=…`, and prints a folded
-WIF/public-ID card directly on the CTP500. A small configurable avatar travels
-in the public link. Keys stay in the tab; avatar etching, transaction spending,
+WIF/public-ID card directly on the CTP500. The card and public identity use the Zorkmid symbol; avatar creation is paused.
+Keys stay in the tab; avatar etching, transaction spending,
 and token issuance are later work. [Onboarding details](onboard/README.md).
 
 Lantern is an application within the Zorkmid world.
@@ -34,10 +33,10 @@ Lantern is an application within the Zorkmid world.
 <p align="center">
   <a href="https://johnrigler.github.io/lantern/lantern.html"><strong>▶ PLAY LANTERN NOW</strong></a>
   &nbsp; · &nbsp;
-  <a href="https://johnrigler.github.io/lantern/">Watch the animated preview</a>
+  <a href="https://johnrigler.github.io/lantern/">Choose Zork 1, 2, or 3</a>
 </p>
 
-The preview above shows the game interface. The [GitHub Pages homepage](https://johnrigler.github.io/lantern/) animates commands and responses, then loops. **The Play link opens the real interactive client**, which connects to the default Lantern game server at `https://rigler.org/lantern/`. Availability depends on that server being online and having the game files installed.
+The [homepage](https://johnrigler.github.io/lantern/) shows Zork 1, Zork 2, and Zork 3 with their subtitles and short taglines. Each choice opens the real game inside the Zorkmid world. The client connects to the default Frotz server at `https://rigler.org/lantern/`; availability depends on that server and its story files. [Game catalogue and source notes](docs/game-catalogue.md).
 
 ## How it works
 

@@ -1,5 +1,4 @@
 import { publicProfile, normalizeAddress, buildIdentityUrl, shortId } from '../onboard/wallet.js';
-import { drawAvatar } from '../onboard/artwork.js';
 import { FileProxy, readSettings, saveSettings } from './file-proxy.js';
 import { openIdentity, loadComments, saveComment } from './comments.js';
 
@@ -18,7 +17,6 @@ function account() {
   $('accountName').textContent = profile.name || 'Wanderer';
   $('accountAddress').textContent = session ? address : address ? 'Public ID · ' + shortId(address) + ' · signed out' : 'Looking around · signed out';
   $('accountAddress').title = address;
-  drawAvatar($('accountAvatar').getContext('2d'), 0, 0, 64, profile.avatar, true);
   $('loginOpen').hidden = Boolean(session); $('logout').hidden = !session;
   $('commentHint').textContent = session ? 'Public · signed with your ID' : 'Sign in to post.';
   $('postComment').textContent = session ? 'Sign & post' : 'Sign in';
@@ -38,11 +36,19 @@ function setView(next) {
   // The iframe is mounted once. Hiding a panel does not reset its game session.
 }
 document.querySelectorAll('button[data-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
-const server = new URL(location.href).searchParams.get('server');
-if (server) { const url = new URL($('gameFrame').src); url.searchParams.set('server', server); $('gameFrame').src = url.href; }
+const launchParams = new URL(location.href).searchParams;
+const server = launchParams.get('server');
+const selectedGame = launchParams.get('game');
+const gameUrl = new URL($('gameFrame').src);
+if (server) gameUrl.searchParams.set('server', server);
+if (['zork1', 'zork2', 'zork3'].includes(selectedGame)) {
+  gameUrl.searchParams.set('game', selectedGame);
+  if (launchParams.get('start') === '1') gameUrl.searchParams.set('start', '1');
+}
+if (server || gameUrl.searchParams.has('game')) $('gameFrame').src = gameUrl.href;
 
 function loginOpen() {
-  $('loginName').value = appearance.name; $('loginAvatar').value = appearance.avatar[0];
+  $('loginName').value = appearance.name;
   status('loginStatus', ''); $('loginDialog').showModal(); $('loginWif').focus();
 }
 $('loginOpen').addEventListener('click', loginOpen);
@@ -52,7 +58,7 @@ $('loginForm').addEventListener('submit', async event => {
   event.preventDefault(); $('loginSubmit').disabled = true; status('loginStatus', 'Checking your recovery key locally…');
   const wif = $('loginWif').value; $('loginWif').value = '';
   try {
-    const profile = publicProfile({ name: $('loginName').value, avatar: $('loginAvatar').value + appearance.avatar.slice(1) });
+    const profile = publicProfile({ name: $('loginName').value });
     const next = await openIdentity(wif, profile);
     if (!$('loginDialog').open) { next.signOut(); return; }
     session?.signOut(); session = next; appearance = profile; watching = next.address;
@@ -74,12 +80,11 @@ function renderComments(comments) {
   for (const envelope of comments) {
     const p = envelope.payload, article = document.createElement('article'); article.className = 'comment';
     const heading = document.createElement('div'); heading.className = 'comment-header';
-    const avatar = document.createElement('canvas'); avatar.width = avatar.height = 76; avatar.setAttribute('aria-hidden', 'true');
-    drawAvatar(avatar.getContext('2d'), 0, 0, 76, p.avatar, true);
+    const symbol = document.createElement('span'); symbol.className = 'comment-symbol'; symbol.setAttribute('aria-hidden', 'true');
     const meta = document.createElement('div'), author = document.createElement('a'), time = document.createElement('time');
     author.href = buildIdentityUrl(p.address, p); author.textContent = p.name || 'Wanderer ' + shortId(p.address);
     author.title = 'Verified wallet signature · ' + p.address; time.dateTime = p.createdAt; time.textContent = new Date(p.createdAt).toLocaleString();
-    meta.append(author, time); heading.append(avatar, meta);
+    meta.append(author, time); heading.append(symbol, meta);
     const text = document.createElement('p'); text.textContent = p.text;
     const address = document.createElement('div'); address.className = 'comment-address'; address.textContent = '✓ ' + p.address;
     article.append(heading, text, address); fragment.append(article);

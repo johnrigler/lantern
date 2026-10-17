@@ -153,6 +153,21 @@ test('onboarding creates/restores locally, protects links, and reuses BLE across
   const identityLink = f.$('identityLink').href;
   assert(identityLink.startsWith('https://johnrigler.github.io/lantern/id.html?address='));
   assert(!identityLink.includes(firstWif)); assert.equal(f.$('recoveryDetails').open, false);
+  assert.equal(f.$('receiptPreview').closest('details'), null);
+  assert.equal(f.$('printSection').hidden, false);
+  assert.equal(f.$('avatarKind'), null);
+  const savedRaster = f.$('saveWallet').href;
+  const initialPreview = f.$('receiptPreview').src;
+  const initialImage = await canvas.loadImage(initialPreview);
+  assert.equal(initialImage.width, 1280); assert.equal(initialImage.height, 384);
+  f.$('rotatePreview').click();
+  const rotatedImage = await canvas.loadImage(f.$('receiptPreview').src);
+  assert.equal(rotatedImage.width, 384); assert.equal(rotatedImage.height, 1280);
+  assert.equal(f.$('saveWallet').href, savedRaster);
+  for (let i = 0; i < 3; i++) f.$('rotatePreview').click();
+  assert.equal(f.$('receiptPreview').src, initialPreview);
+  assert.equal(f.$('saveWallet').href, savedRaster);
+
   f.$('copyId').click(); await settleUntil(() => !f.$('createId').disabled);
   assert.equal(f.w.copiedText, identityLink);
   f.$('idPage').value = 'javascript:alert(1)'; f.$('idPage').dispatchEvent(new f.w.Event('input'));
