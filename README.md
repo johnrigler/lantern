@@ -1,4 +1,20 @@
-# Lantern
+# Zorkmid
+
+**Create an eCash identity and print a Zorkmid card:** open the website and choose
+**CREATE YOUR ZORKMID ID**, or open [`onboard/index.html`](onboard/index.html).
+The current Pages route during the repository rename is
+[ID onboarding](https://johnrigler.github.io/lantern/onboard/); opening the site
+under `/zorkmid/` automatically uses that path in public ID links.
+
+The browser creates or restores an eCash (XEC / Bitcoin ABC) mainnet key, provides
+a public receiving identity at `id.html?address=…`, and prints a folded
+WIF/public-ID card directly on the CTP500. A small configurable avatar travels
+in the public link. Keys stay in the tab; avatar etching, transaction spending,
+and token issuance are later work. [Onboarding details](onboard/README.md).
+
+Lantern is an application within the Zorkmid world.
+
+## Lantern
 
 **Play classic text adventures in your browser.** Lantern is a playable Z-machine game interface, beginning with Zork I, with optional self-hosting and experiments in portable saves and player-held signatures.
 

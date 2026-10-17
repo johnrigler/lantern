@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Create your ID · Zorkmid</title>
+  <meta name="description" content="Create a local eCash receiving identity and print a folded Zorkmid card on the CTP500.">
+  <link rel="stylesheet" href="style.css?v=20261017-id1">
+</head>
+<body>
+<header>
+  <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">Z</span>ZORKMID</a>
+  <nav aria-label="Project"><a href="../lantern.html">Lantern</a><a href="https://github.com/johnrigler/zorkmid" target="_blank" rel="noopener noreferrer">Source</a></nav>
+</header>
+<main>
+  <section class="intro">
+    <p class="eyebrow">A key to carry / a place in the world</p>
+    <h1>Create your Zorkmid ID.</h1>
+    <p>Choose your appearance, create an eCash wallet, and print your card. The public side opens your ID. Your recovery key folds behind it.</p>
+  </section>
+  <section class="panel" aria-labelledby="appearanceHeading">
+    <h2 id="appearanceHeading">1. Make it yours</h2>
+    <div class="profile-grid">
+      <div class="avatar-frame"><canvas id="avatarPreview" width="96" height="96" role="img" aria-label="Your Zorkmid avatar"></canvas></div>
+      <div class="fields">
+        <div><label for="displayName">Public name (optional)</label><input id="displayName" maxlength="24" placeholder="Wanderer" autocomplete="off"></div>
+        <div class="avatar-fields">
+          <div><label for="avatarKind">Character</label><select id="avatarKind"><option value="0">Explorer</option><option value="1">Mage</option><option value="2">Robot</option><option value="3">Raven</option></select></div>
+          <div><label for="avatarHat">Headwear</label><select id="avatarHat"><option value="0">None</option><option value="1">Cap</option><option value="2">Hood</option></select></div>
+          <div><label for="avatarAccent">Color</label><select id="avatarAccent"><option value="0">Amber</option><option value="1">Green</option><option value="2">Blue</option><option value="3">Violet</option></select></div>
+        </div>
+        <p class="muted">Your name and avatar travel in the public ID link. They are not etched into the ledger yet.</p>
+      </div>
+    </div>
+    <div class="actions"><button id="createId" class="primary" type="button">Create eCash ID</button><span class="muted">eCash (XEC) · mainnet</span></div>
+    <details class="support"><summary>Restore an existing eCash WIF</summary>
+      <label for="restoreWif">Private recovery key (WIF)</label>
+      <input id="restoreWif" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Enter your mainnet WIF">
+      <div class="actions"><button id="restoreId" type="button">Restore ID</button></div>
+      <p class="muted">The key stays in this tab. Check the receiving address against your backup before funding it.</p>
+    </details>
+    <p id="walletStatus" class="status" role="status" aria-live="polite"></p>
+  </section>
+  <section id="identitySection" class="panel" aria-labelledby="identityHeading" hidden>
+    <span class="pill">eCash / XEC / mainnet</span>
+    <h2 id="identityHeading">Your public identity</h2>
+    <div class="identity-grid">
+      <canvas id="receiveQr" class="qr" width="240" height="240" role="img" aria-label="Receiving address QR code"></canvas>
+      <div>
+        <p id="publicName"></p><p id="receiveAddress" class="address"></p>
+        <div class="actions"><button id="copyAddress" class="secondary" type="button">Copy address</button><button id="copyId" class="secondary" type="button">Copy ID link</button></div>
+        <a id="identityLink" class="identity-url" target="_blank" rel="noopener noreferrer"></a>
+        <p class="muted">Fund the address with native XEC. Keep the recovery key to spend or sign later.</p>
+      </div>
+    </div>
+    <p id="copyStatus" class="muted copy-status" role="status" aria-live="polite"></p>
+    <details id="recoveryDetails" class="support"><summary>Private recovery key</summary>
+      <p class="muted">Anyone with this WIF can control the wallet.</p><p id="recoveryWif" class="recovery"></p>
+      <button id="copyWif" class="secondary" type="button">Copy private WIF</button>
+      <label class="checkbox"><input id="backupKept" type="checkbox"><span>I have kept a copy of this recovery key.</span></label>
+    </details>
+  </section>
+  <section id="printSection" class="panel" aria-labelledby="printHeading" hidden>
+    <h2 id="printHeading">2. Print your folded card</h2>
+    <p class="muted">CTP500 / Teal Printer · sideways text · fold the private half behind your public ID.</p>
+    <div class="print-row actions">
+      <button id="connectPrinter" type="button">Connect Bluetooth printer</button>
+      <button id="connectSerial" class="secondary" type="button" hidden>Use Serial</button>
+      <button id="disconnectPrinter" class="secondary" type="button" hidden>Disconnect</button>
+      <button id="printCard" class="primary" type="button" disabled>Print ID card</button>
+    </div>
+    <p id="connectionStatus" class="muted print-help" role="status">Choose Teal Printer. The connection is reused for the next person.</p>
+    <p id="printStatus" class="status" role="status" aria-live="polite"></p>
+    <progress id="printProgress" max="100" value="0" aria-label="Print transfer progress" hidden></progress>
+    <div class="actions">
+      <a id="savePublic" class="button secondary" download="zorkmid-public-id.png">Save public card</a>
+      <a id="saveWallet" class="button secondary" download="zorkmid-private-wallet.png">Save folded wallet (private)</a>
+    </div>
+    <details id="previewDetails" class="support"><summary>Full print preview — includes private key</summary>
+      <div class="print-preview"><img id="receiptPreview" alt="Folded Zorkmid identity card with private WIF and public ID"></div>
+    </details>
+    <details class="support"><summary>Printer settings and public link</summary>
+      <div class="fields">
+        <div><label for="printMode">Print speed</label><select id="printMode"><option value="fast">Fast (recommended)</option><option value="acknowledged">Acknowledged writes</option><option value="compatibility">Compatibility</option></select></div>
+        <div><label for="idPage">Public ID page</label><input id="idPage" type="url" spellcheck="false" autocomplete="off"></div>
+        <p id="printDetails" class="muted"></p>
+        <p class="muted">Keep this tab open until sending finishes. Close InstaPrint and disconnect other printer tools before connecting. Bluetooth requires a supported browser on HTTPS or localhost.</p>
+      </div>
+    </details>
+  </section>
+  <p class="muted note">Keys are generated on this device and kept only in this tab. Print or save your recovery key before leaving.</p>
+</main>
+<footer>Zorkmid ID · v0.1 · <a href="README.md">How it works</a> · <a href="https://github.com/johnrigler/zorkmid">Project repository</a></footer>
+<script src="vendor/qrcode.min.js"></script>
+<script src="vendor/chisel.js"></script>
+<script src="vendor/chisel.sign.js"></script>
+<script type="module" src="onboard.js?v=20261017-id1"></script>
+</body>
+</html>
