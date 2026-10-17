@@ -24,7 +24,7 @@ export function saveSettings(value, storage = globalThis.localStorage) {
   storage?.setItem(SETTINGS_KEY, JSON.stringify(clean)); return clean;
 }
 export class FileProxy {
-  constructor(url, fetcher = globalThis.fetch) { this.url = serviceUrl(url); this.fetch = fetcher; }
+  constructor(url, fetcher = globalThis.fetch) { this.url = serviceUrl(url); this.fetch = fetcher.bind(globalThis); }
   async request(route, path, text) {
     const target = this.url + route + (text === undefined ? '?path=' + encodeURIComponent(safePath(path)) : '');
     const response = await this.fetch(target, { method: text === undefined ? 'GET' : 'POST',

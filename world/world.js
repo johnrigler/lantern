@@ -1,5 +1,5 @@
 import { publicProfile, normalizeAddress, buildIdentityUrl, shortId } from '../onboard/wallet.js';
-import { FileProxy, readSettings, saveSettings } from './file-proxy.js';
+import { FileProxy, readSettings, saveSettings } from './file-proxy.js?v=20261017-menu2';
 import { openIdentity, loadComments, saveComment } from './comments.js';
 
 const $ = id => document.getElementById(id);

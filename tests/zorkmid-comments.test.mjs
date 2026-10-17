@@ -67,3 +67,12 @@ test('only public service settings persist and paths cannot escape the selected 
   for (const path of ['../outside', '/absolute', 'a/../b', 'a//b', 'a\\b', '%2e%2e/x']) assert.throws(() => safePath(path));
   assert.throws(() => saveSettings({ ...clean, proxy: 'https://password@files.example' }, storage));
 });
+
+
+test('File Proxy invokes a browser-native fetch with the global receiver', async () => {
+  const proxy = new FileProxy('https://files.example/transport', async function () {
+    assert.equal(this, globalThis);
+    return new Response(JSON.stringify({ ok: true, items: [] }));
+  });
+  assert.deepEqual(await proxy.list('zorkmid/comments'), []);
+});
